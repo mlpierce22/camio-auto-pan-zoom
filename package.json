@@ -7,7 +7,10 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "el-build": "npm run el-build-task && npm run el-package-task",
+    "el-build-task": "ng build --prod",
+    "el-package-task": "cat ./docs/{polyfills-es5,runtime-es5,main-es5,scripts}.js > ./elements/camio-stream.js"
   },
   "private": true,
   "dependencies": {
@@ -15,10 +18,13 @@
     "@angular/common": "~10.0.5",
     "@angular/compiler": "~10.0.5",
     "@angular/core": "~10.0.5",
+    "@angular/elements": "^10.0.5",
     "@angular/forms": "~10.0.5",
     "@angular/platform-browser": "~10.0.5",
     "@angular/platform-browser-dynamic": "~10.0.5",
     "@angular/router": "~10.0.5",
+    "@webcomponents/custom-elements": "^1.4.2",
+    "document-register-element": "^1.7.2",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"

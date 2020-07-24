@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
+import { createCustomElement } from '@angular/elements';
 
 import { AppComponent } from './app.component';
 
@@ -11,6 +12,17 @@ import { AppComponent } from './app.component';
     BrowserModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  entryComponents: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+  constructor(private inject: Injector) {
+  }
+  ngDoBootstrap() {
+    const panZoom = createCustomElement(AppComponent, { injector: this.inject });
+    if (!customElements.get('pan-zoom')) {
+      customElements.define('pan-zoom', panZoom);
+    } else {
+      console.warn("stream-component declared multiple times")
+    }
+  }
+}
