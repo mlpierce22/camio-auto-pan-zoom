@@ -1,0 +1,26 @@
+.wrapper {
+  display: flex;
+  position: relative;
+
+  .zoom-buttons {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 4%;
+    right: 8%;
+
+    img {
+      padding: 5px;
+      border-radius: 50%;
+      background-color: #ffffff7e;
+      cursor: pointer;
+    }
+    .zoom-in {
+      margin-bottom: 5px;
+    }
+
+    .zoom-out {
+      
+    }
+  }
+}
