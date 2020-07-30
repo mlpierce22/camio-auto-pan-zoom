@@ -1,9 +1,9 @@
-<div class="wrapper" [style.height.px]="config.height" [style.width.px]="config.width">
-  <div (panLeft)="panLeft()" class="video-window">
+<div class="wrapper" (mouseover)="userOver(true)" (mouseout)="userOver(false)" [style.height.px]="config.height" [style.width.px]="config.width">
+  <div class="video-window">
     <video #videoElem [style.height.px]="config.height" [style.width.px]="config.width" [src]="config.videoUrl"></video>
   </div>
-  <div class="zoom-buttons">
-    <img class="zoom-in" src="https://icongr.am/material/magnify-plus.svg?{{ getSize() }}&color=currentColor">
-    <img class="zoom-out" src="https://icongr.am/material/magnify-minus.svg?{{ getSize() }}&color=currentColor">
+  <div class="zoom-buttons" [ngClass]="{'hide': !showZoomTools }">
+    <img class="zoom-in" (click)="zoom(.5)" src="https://icongr.am/material/magnify-plus.svg?{{ getSize() }}&color=currentColor">
+    <img class="zoom-out" (click)="zoom(-.5)" src="https://icongr.am/material/magnify-minus.svg?{{ getSize() }}&color=currentColor">
   </div>
 </div>

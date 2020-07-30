@@ -2,12 +2,21 @@
   display: flex;
   position: relative;
 
+  .video-window {
+    overflow: hidden;
+  }
+
   .zoom-buttons {
     display: flex;
     flex-direction: column;
     position: absolute;
     top: 4%;
-    right: 8%;
+    right: 3%;
+
+    &.hide {
+      opacity: 0;
+      animation: ease-in-out 1000;
+    }
 
     img {
       padding: 5px;
