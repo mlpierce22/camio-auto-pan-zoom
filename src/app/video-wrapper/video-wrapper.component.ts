@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import panzoom, { PanZoom, PanZoomOptions, TransformOrigin } from 'panzoom'
 
 @Component({
@@ -8,25 +8,41 @@ import panzoom, { PanZoom, PanZoomOptions, TransformOrigin } from 'panzoom'
 })
 export class VideoWrapperComponent implements OnInit, AfterViewInit {
 
+  /** The config passed from the JS */
   @Input() config
 
+  /** The video element to give to the container. */
+  @Output() videoElementSetup: EventEmitter<HTMLVideoElement> = new EventEmitter<HTMLVideoElement>()
+
+  /** The video element from the dom. */
   @ViewChild('videoElem') videoElemRef: ElementRef<HTMLVideoElement>;
 
+  /** The panzoom object. */
   panzoom: PanZoom
 
+  /** The current zoomLevel as a float. */
   zoomLevel: number
 
-  panzoomConfig: PanZoomOptions = {
-    bounds: true,
-  }
-
+  /** Defined minimum and maximum zoom levels. */
   MAX_ZOOM = 4
   MIN_ZOOM = 1
+
+  /** The config for the panZoom */
+  panzoomConfig: PanZoomOptions = {
+    bounds: true,
+    boundsPadding: 1,
+    minZoom: this.MIN_ZOOM,
+    maxZoom: this.MAX_ZOOM,
+    onDoubleClick: function(e) {
+      return true; // tells the library to not preventDefault, and not stop propagation
+    }
+  }
 
   showZoomTools: boolean = false;
 
   tranformOrigin: TransformOrigin;
 
+  /** Function to determine whether the user is hovering over the video. */
   userOver(status: boolean) {
     if (status) {
       this.panzoom.resume()
@@ -38,31 +54,15 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /** Set up the video component with the panZoom config */
   setupVideo(videoElem: HTMLVideoElement) {
     this.zoomLevel = 1
     this.tranformOrigin = {
       x: .5,
       y: .5
-      // x: this.config.width/2, 
-      // y: this.config.height/2 
     }
-    let bounds = {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-    }
-    this.panzoom = panzoom(videoElem, {
-      bounds: true,
-      boundsPadding: 1,
-      minZoom: this.MIN_ZOOM,
-      maxZoom: this.MAX_ZOOM,
-      onDoubleClick: function(e) {
-        // `e` - is current double click event.
-        console.log(e)
-        return true; // tells the library to not preventDefault, and not stop propagation
-      }
-    })
+    this.panzoom = panzoom(videoElem, this.panzoomConfig)
+    // Fix to make sure it stays in bounds but still allows zoom thanks to https://github.com/anvaka/panzoom/issues/33#issuecomment-498225590
     this.panzoom.on('panend', (e: PanZoom) => {
       const { x } = e.getTransform();
       const maxTranslate = videoElem.getBoundingClientRect().width - videoElem.clientWidth;
@@ -71,12 +71,13 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
         e.moveBy(-(x + maxTranslate), 0, true);
       }
     });
-    //this.panzoom.zoomAbs(this.tranformOrigin.x, this.tranformOrigin.y, this.zoomLevel)
     videoElem.autoplay = true;
     videoElem.muted = true
     videoElem.controls = false
+    this.videoElementSetup.emit(videoElem)
   }
 
+  /** Get the size of the magnifying glasses (max 35). */
   getSize() {
     let height = this.config.height * .12
     if (height > 35) {
@@ -85,6 +86,7 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
     return 'size=' + height
   }
 
+  /** Handle zoom by a specified parameter. */
   zoom(value: number) {
     this.zoomLevel = this.panzoom.getTransform().scale + value
     if (this.zoomLevel >= this.MAX_ZOOM) {
@@ -96,7 +98,6 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
     } else {
       this.panzoom.smoothZoomAbs(this.tranformOrigin.x, this.tranformOrigin.y, this.zoomLevel)
     }
-    console.log("moved to x, y, z", this.tranformOrigin.x, this.tranformOrigin.y, this.zoomLevel)
   }
 
 
@@ -106,6 +107,7 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    // Need to wait for the videoElement to be attached.
     this.setupVideo(this.videoElemRef.nativeElement)
   }
 

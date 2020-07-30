@@ -1,1 +1,1 @@
-<app-video-wrapper *ngIf="parsedConfig$ | async as parsedConfig" [config]="parsedConfig"></app-video-wrapper>
+<app-video-wrapper *ngIf="parsedConfig$ | async as parsedConfig" [config]="parsedConfig" (videoElementSetup)="videoElementSetup.emit()"></app-video-wrapper>
