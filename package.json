@@ -25,6 +25,7 @@
     "@angular/router": "~10.0.5",
     "@webcomponents/custom-elements": "^1.4.2",
     "document-register-element": "^1.7.2",
+    "panzoom": "^9.2.5",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
