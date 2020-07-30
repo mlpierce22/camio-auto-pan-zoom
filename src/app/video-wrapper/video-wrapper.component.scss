@@ -4,6 +4,10 @@
 
   .video-window {
     overflow: hidden;
+    
+    &:hover {
+      cursor: move;
+    }
   }
 
   .zoom-buttons {
@@ -26,10 +30,6 @@
     }
     .zoom-in {
       margin-bottom: 5px;
-    }
-
-    .zoom-out {
-      
     }
   }
 }
