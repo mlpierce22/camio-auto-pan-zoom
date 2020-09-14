@@ -30,7 +30,6 @@
 ## Quickstart Usage:
 ```
 <body>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/camio-auto-pan-zoom@master/element/pan-zoom.js"></script>
   <pan-zoom></pan-zoom>
   <script>
     var config = {
@@ -49,6 +48,7 @@
       console.log("video element is set up!", video)
     })
   </script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/camio-auto-pan-zoom@master/element/pan-zoom.js"></script>
 </body>
 ```
 
