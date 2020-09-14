@@ -9,7 +9,7 @@
 ## Installation
 ### In Angular:
 1. Add `schemas: [CUSTOM_ELEMENTS_SCHEMA]` into `app.module.ts` of the app you want to import into.
-2. In `main.ts` add an import statement. I recommend downloading the pan-zoom.js file at this link and placing it into a local folder. For example, if I wanted something like `<script type='text/javascript' src="./pan-zoom.js"></script>`, then I would run something like `curl https://raw.githubusercontent.com/mlpierce22/camio-auto-pan-zoom/master/element/pan-zoom.js > ./elements/pan-zoom.js` write this import into the main.ts: `import "../element/pan-zoom.js"`.
+2. In `main.ts` add an import statement. I recommend downloading the pan-zoom.js file at this link and placing it into a local folder. For example, if I wanted something like `<script type='text/javascript' src="./pan-zoom.js"></script>`, then I would run something like `curl https://raw.githubusercontent.com/mlpierce22/camio-auto-pan-zoom/master/element/pan-zoom.js > ./element/pan-zoom.js` write this import into the main.ts: `import "../element/pan-zoom.js"`.
 3. Using the tag name that you declared for the custom component, just embed it where you want it in the app as if it was a regular component. Eg. in this case: `<pan-zoom></pan-zoom>`
 
 ### In Javascript and HTML:
@@ -21,7 +21,7 @@
 ...
 <body>
   <pan-zoom></pan-zoom>
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/camio-auto-pan-zoom@master/elements/pan-zoom.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/camio-auto-pan-zoom@master/element/pan-zoom.js"></script>
   <script>
     // Javascript code for registering event listeners (see Javascript: Outputs below)
   </script>
@@ -30,6 +30,7 @@
 ## Quickstart Usage:
 ```
 <body>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/mlpierce22/camio-auto-pan-zoom@master/element/pan-zoom.js"></script>
   <pan-zoom></pan-zoom>
   <script>
     var config = {
