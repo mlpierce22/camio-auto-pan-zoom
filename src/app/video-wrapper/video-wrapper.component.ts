@@ -71,20 +71,9 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
         e.moveBy(-(x + maxTranslate), 0, true);
       }
     });
-    videoElem.autoplay = true;
-    videoElem.muted = true
-    videoElem.controls = false
     this.videoElementSetup.emit(videoElem)
   }
 
-  /** Get the size of the magnifying glasses (max 35). */
-  getSize() {
-    let height = this.config.height * .12
-    if (height > 35) {
-      return 'size=' + 35
-    }
-    return 'size=' + height
-  }
 
   /** Handle zoom by a specified parameter. */
   zoom(value: number) {
@@ -99,7 +88,13 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
       this.panzoom.smoothZoomAbs(this.tranformOrigin.x, this.tranformOrigin.y, this.zoomLevel)
     }
   }
-
+  /** Get the size of the video object from the config with units. */
+  getVideoDimensions() {
+    return {
+      width: this.config.width + this.config.units + '',
+      height: this.config.height + this.config.units + ''
+    }
+  }
 
   constructor() { }
 
