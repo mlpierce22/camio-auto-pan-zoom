@@ -38,6 +38,8 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
     }
   }
 
+  videoPlaying = false;
+
   showZoomTools: boolean = false;
 
   tranformOrigin: TransformOrigin;
@@ -71,6 +73,9 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
         e.moveBy(-(x + maxTranslate), 0, true);
       }
     });
+    videoElem.controls = false;
+    videoElem.autoplay = true;
+    videoElem.muted = true
     this.videoElementSetup.emit(videoElem)
   }
 
@@ -93,6 +98,17 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
     return {
       width: this.config.width + this.config.units + '',
       height: this.config.height + this.config.units + ''
+    }
+  }
+
+  togglePlay() {
+    const video = this.videoElemRef.nativeElement
+    if(video.paused) {
+      video.play();
+      this.videoPlaying = false;
+    } else {
+      video.pause()
+      this.videoPlaying = true;
     }
   }
 

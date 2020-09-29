@@ -19,9 +19,6 @@
     document.querySelector("pan-zoom").addEventListener("videoElementSetup", function(elementSetUp) {
       // set video options, etc. since this is the actual video object
       const video = elementSetUp.detail
-      video.autoplay = true;
-      video.muted = true
-      video.controls = false
       console.log("video element is set up!", video)
     })
   </script>
