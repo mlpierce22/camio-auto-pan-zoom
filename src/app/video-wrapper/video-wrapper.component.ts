@@ -1,5 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import panzoom, { PanZoom, PanZoomOptions, TransformOrigin } from 'panzoom'
+import { Config } from 'src/app/models'
 
 @Component({
   selector: 'app-video-wrapper',
@@ -9,13 +10,16 @@ import panzoom, { PanZoom, PanZoomOptions, TransformOrigin } from 'panzoom'
 export class VideoWrapperComponent implements OnInit, AfterViewInit {
 
   /** The config passed from the JS */
-  @Input() config
+  @Input() config: Config;
 
   /** The video element to give to the container. */
   @Output() videoElementSetup: EventEmitter<HTMLVideoElement> = new EventEmitter<HTMLVideoElement>()
 
   /** The video element from the dom. */
   @ViewChild('videoElem') videoElemRef: ElementRef<HTMLVideoElement>;
+
+  /** The progress bar from the dom. */
+  @ViewChild('progressBar') progressBar: ElementRef<HTMLDivElement>;
 
   /** The panzoom object. */
   panzoom: PanZoom
@@ -43,6 +47,12 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
   showZoomTools: boolean = false;
 
   tranformOrigin: TransformOrigin;
+
+  urlMetaData;
+
+  totalVideoDuration = 0;
+
+  progressPercent = 0;
 
   /** Function to determine whether the user is hovering over the video. */
   userOver(status: boolean) {
@@ -75,7 +85,60 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
     });
     videoElem.controls = false;
     videoElem.autoplay = true;
-    videoElem.muted = true
+    videoElem.muted = true;
+    
+    let activeVideo = 0;
+    let videoUrlOptions = this.config.videoUrls;
+    let baseVideoCount = 0;
+    let activeVideoDuration = 0
+    videoElem.src = videoUrlOptions[activeVideo];
+    
+    // thanks to https://stackoverflow.com/a/32343119, for the loop idea
+    videoElem.addEventListener('ended', (e) => {
+      activeVideoDuration = e["path"][0].duration;
+      
+      // update the new active video index
+      activeVideo = (++activeVideo) % videoUrlOptions.length;
+
+      if (activeVideo == 0) {
+        // we started over, reset to 0, else, update the base to include the last video length
+        baseVideoCount = 0;
+      } else {
+        baseVideoCount += activeVideoDuration;
+      }
+
+      // update the video source and play
+      videoElem.src = videoUrlOptions[activeVideo];
+      videoElem.play();
+    });
+
+    videoElem.addEventListener("timeupdate", (e) => {
+      this.progressPercent = Math.floor((videoElem.currentTime + baseVideoCount) / this.totalVideoDuration * 100)
+    })
+
+    this.progressBar.nativeElement.addEventListener("click", (e) => {
+      let parentRect = this.progressBar.nativeElement.getBoundingClientRect();
+
+      const fillRect = e["path"][0].getBoundingClientRect();
+      const totalWidth = parentRect.y - parentRect.x
+      //const fillLength = rect.width;
+      console.log(totalWidth, e.offsetX)
+      const newWidthPercent = Math.floor(e.offsetX / totalWidth * 100);
+      console.log(newWidthPercent)
+
+     // const percentage = ( totalLeft / width );
+      //const timeToGoTo = percentage * this.totalVideoDuration
+      // if (0 <= baseVideoCount) {
+
+      // } else if (timeToGoTo >= videoElem.duration) {
+
+
+      // } else {
+      //   console.log("time, vase", timeToGoTo, baseVideoCount)
+      //   videoElem.currentTime = timeToGoTo - baseVideoCount
+      // }
+    })
+
     this.videoElementSetup.emit(videoElem)
   }
 
@@ -112,9 +175,21 @@ export class VideoWrapperComponent implements OnInit, AfterViewInit {
     }
   }
 
+  getTotalTime() {
+    for (let i = 0; i < this.config.videoUrls.length; i++) {
+      const video = document.createElement("video")
+      video.src = this.config.videoUrls[i];
+      video.load()
+      video.onloadedmetadata = (e) => {
+        this.totalVideoDuration += e["path"][0].duration
+      }
+    }
+  }
+
   constructor() { }
 
   ngOnInit(): void {
+    this.getTotalTime();
   }
 
   ngAfterViewInit(): void {

@@ -4,7 +4,6 @@
 
   .play-pause {
     display: flex;
-    flex-direction: column;
     margin-right: -100px;
     padding-left: 35px;
     z-index: 1;
@@ -107,5 +106,18 @@
         width: 25px;
       }
     }
+  }
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: rgb(255, 194, 194);
+  align-self: center;
+
+  .fill {
+    background-color: red;
+    height: 100%;
+
   }
 }
