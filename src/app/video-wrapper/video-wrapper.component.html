@@ -1,16 +1,18 @@
-<div class="wrapper" (mouseover)="userOver(true)" (mouseout)="userOver(false)" [ngStyle]="getVideoDimensions()">
-  <div class="play-pause">
-    <img [hidden]="!videoPlaying" class="icon" (click)="togglePlay()" src="https://icongr.am/material/play.svg?color=currentColor">
-    <img [hidden]="videoPlaying" class="icon" (click)="togglePlay()" src="https://icongr.am/material/pause.svg?color=currentColor">
+<div class="container">
+  <div class="wrapper" (mouseover)="userOver(true)" (mouseout)="userOver(false)" [ngStyle]="getVideoDimensions()">
+    <div class="play-pause" [ngClass]="{'hide': !showZoomTools }">
+      <img [hidden]="!videoPlaying" class="icon" (click)="togglePlay()" src="https://icongr.am/material/play.svg?color=currentColor">
+      <img [hidden]="videoPlaying" class="icon" (click)="togglePlay()" src="https://icongr.am/material/pause.svg?color=currentColor">
+    </div>
+    <div class="video-window">
+      <video #videoElem [ngStyle]="getVideoDimensions()"></video>
+    </div>
+    <div class="zoom-buttons" [ngClass]="{'hide': !showZoomTools }">
+      <img class="zoom-in" (click)="zoom(.5)" src="https://icongr.am/material/magnify-plus.svg?color=currentColor">
+      <img class="zoom-out" (click)="zoom(-.5)" src="https://icongr.am/material/magnify-minus.svg?color=currentColor">
+    </div>
   </div>
-  <div class="video-window">
-    <video #videoElem [ngStyle]="getVideoDimensions()"></video>
+  <div #progressBar class="progress-bar">
+    <div class="fill" [style.width.%]="progressPercent"></div>
   </div>
-  <div class="zoom-buttons" [ngClass]="{'hide': !showZoomTools }">
-    <img class="zoom-in" (click)="zoom(.5)" src="https://icongr.am/material/magnify-plus.svg?color=currentColor">
-    <img class="zoom-out" (click)="zoom(-.5)" src="https://icongr.am/material/magnify-minus.svg?color=currentColor">
-  </div>
-</div>
-<div #progressBar class="progress-bar">
-  <div class="fill" [style.width.%]="progressPercent"></div>
 </div>
